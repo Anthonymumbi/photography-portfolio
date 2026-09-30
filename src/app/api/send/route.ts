@@ -1,3 +1,4 @@
+import { env } from '~/env.js'
 import {
   OrderConfirmationEmail,
   OrderConfirmationEmailText,
@@ -20,7 +21,7 @@ import { emailSchema } from '~/lib/validations/store'
 import { logAction } from '~/lib/logging'
 import { emailRateLimit, getClientIP } from '~/lib/rate-limit'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(env.RESEND_API_KEY)
 
 interface ShippingAddress {
   line1: string
@@ -98,7 +99,7 @@ export async function POST(request: Request) {
     const formattedTotal = `£${(order.orders.total / 100).toFixed(2)}`
 
     // Validate admin email exists
-    if (!process.env.ADMIN_EMAIL) {
+    if (!env.ADMIN_EMAIL) {
       await logAction('email', 'Admin email not configured')
       return Response.json({ error: 'Email configuration error' }, { status: 500 })
     }
@@ -162,7 +163,7 @@ export async function POST(request: Request) {
     // Send admin notification email
     const adminEmail = await resend.emails.send({
       from: `${siteConfig.storeName} <${siteConfig.emails.order}>`,
-      to: [process.env.ADMIN_EMAIL],
+      to: [env.ADMIN_EMAIL],
       subject: `New Order #${order.orders.orderNumber} - ${order.products.name}`,
       replyTo: `${siteConfig.storeName} <${siteConfig.emails.replyTo}>`,
       react: AdminOrderNotificationEmail({
