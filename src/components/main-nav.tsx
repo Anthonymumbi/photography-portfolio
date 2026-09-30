@@ -110,18 +110,16 @@ const SheetNavItems = ({
     <Link
       href="/blog"
       className={cn(
-        'transition-colors hover:text-white',
-        pathname === '/blog' ? 'text-white' : 'text-white/60',
+        'text-foreground/60 transition-colors hover:text-foreground',
+        pathname === '/blog' ? 'text-foreground' : 'text-foreground/60',
       )}
       onClick={onLinkClick}
     >
-      Blog
+      Journal
     </Link>
     <Link
       href="/about"
-      className={cn(
-        'text-white/60 transition-colors hover:text-white',
-      )}
+      className="text-foreground/60 transition-colors hover:text-foreground"
       onClick={onLinkClick}
     >
       About
@@ -129,26 +127,24 @@ const SheetNavItems = ({
     {isStoreEnabledClient() && (
       <Link
         href="/store"
-        className={cn(
-          'text-white/60 transition-colors hover:text-white',
-        )}
+        className="text-foreground/60 transition-colors hover:text-foreground"
         onClick={onLinkClick}
       >
-        Store
+        Prints
       </Link>
     )}
     {galleries.length > 0 && (
       <div className="flex flex-col gap-2">
-        <span className="text-foreground/60 font-medium">Galleries</span>
+        <span className="text-foreground/60 font-medium">Work</span>
         {galleries.map((gallery) => (
           <Link
             key={gallery.id}
             href={`/g/${gallery.slug}`}
             className={cn(
-              'text-foreground/60 hover:text-foreground/80 pl-4 transition-colors',
+              'pl-4 transition-colors hover:text-foreground',
               pathname === `/g/${gallery.slug}`
-                ? 'text-white'
-                : 'text-white/60',
+                ? 'text-foreground'
+                : 'text-foreground/60',
             )}
             onClick={onLinkClick}
           >
@@ -161,10 +157,10 @@ const SheetNavItems = ({
       <Link
         href="/admin"
         className={cn(
-          'text-white/60 transition-colors hover:text-white',
+          'transition-colors hover:text-foreground',
           pathname?.startsWith('/admin')
-            ? 'text-white'
-            : 'text-white/60',
+            ? 'text-foreground'
+            : 'text-foreground/60',
         )}
         onClick={onLinkClick}
       >
