@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { db } from '~/server/db'
-import { bookings } from '~/server/db/schema'
+import { bookings, photographyPackages } from '~/server/db/schema'
 import { photographyServices } from '~/config/booking'
+import { eq } from 'drizzle-orm'
+import { sendBookingRequestEmails } from '~/lib/email/booking-email-service'
 
 const serviceValues = photographyServices.map((service) => service.value)
 
@@ -12,6 +14,7 @@ const bookingSchema = z.object({
   phone: z.string().trim().min(7).max(50),
   serviceType: z.string().refine((value) => (serviceValues as readonly string[]).includes(value)),
   packageName: z.string().trim().min(2).max(100),
+  packageId: z.string().uuid().optional(),
   preferredDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   preferredTime: z.string().trim().max(30).optional(),
   city: z.string().trim().min(2).max(100),
@@ -40,15 +43,50 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, reference: 'REQUESTED' })
     }
 
-    const selectedService = photographyServices.find(
-      (service) => service.value === data.serviceType,
-    )
+    let selectedPackage:
+      | {
+          id: string | null
+          name: string
+          serviceType: string
+        }
+      | undefined
 
-    if (!selectedService) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid photography service.' },
-        { status: 400 },
+    if (data.packageId) {
+      try {
+        const row = await db
+          .select({
+            id: photographyPackages.id,
+            name: photographyPackages.name,
+            serviceType: photographyPackages.serviceType,
+          })
+          .from(photographyPackages)
+          .where(eq(photographyPackages.id, data.packageId))
+          .limit(1)
+          .then((rows) => rows[0])
+
+        if (row) selectedPackage = row
+      } catch (error) {
+        console.warn('[Booking API] Package lookup failed, using fallback', error)
+      }
+    }
+
+    if (!selectedPackage) {
+      const selectedService = photographyServices.find(
+        (service) => service.value === data.serviceType,
       )
+
+      if (!selectedService) {
+        return NextResponse.json(
+          { success: false, error: 'Invalid photography service.' },
+          { status: 400 },
+        )
+      }
+
+      selectedPackage = {
+        id: null,
+        name: selectedService.packageName,
+        serviceType: selectedService.value,
+      }
     }
 
     const [booking] = await db
@@ -57,8 +95,9 @@ export async function POST(request: Request) {
         clientName: data.clientName,
         email: data.email,
         phone: data.phone,
-        serviceType: data.serviceType,
-        packageName: selectedService.packageName,
+        serviceType: selectedPackage.serviceType,
+        packageId: selectedPackage.id,
+        packageName: selectedPackage.name,
         preferredDate: data.preferredDate,
         preferredTime: data.preferredTime || null,
         city: data.city,
@@ -75,9 +114,22 @@ export async function POST(request: Request) {
       throw new Error('Booking insert returned no record')
     }
 
+    const reference = `PH-${String(booking.bookingNumber).padStart(5, '0')}`
+
+    void sendBookingRequestEmails({
+      reference,
+      clientName: data.clientName,
+      email: data.email,
+      phone: data.phone,
+      packageName: selectedPackage.name,
+      preferredDate: data.preferredDate,
+      preferredTime: data.preferredTime,
+      city: data.city,
+    })
+
     return NextResponse.json({
       success: true,
-      reference: `PH-${String(booking.bookingNumber).padStart(5, '0')}`,
+      reference,
     })
   } catch (error) {
     console.error('[Booking API] Failed to create booking:', error)
