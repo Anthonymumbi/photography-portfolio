@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { ArrowDownRight, Clock3, MapPin, ShieldCheck } from 'lucide-react'
 import { BookingForm } from '~/components/booking-form'
-import { photographyServices } from '~/config/booking'
+import { getPublicPhotographyPackages } from '~/lib/actions/package-actions'
 
 export const metadata: Metadata = {
   title: 'Book a Photography Session',
@@ -9,7 +9,8 @@ export const metadata: Metadata = {
     'Request a photography date for weddings, portraits, events or brand work.',
 }
 
-export default function BookPage() {
+export default async function BookPage() {
+  const packages = await getPublicPhotographyPackages()
   return (
     <main className="bg-[#f4f1eb] text-[#161512]">
       <section className="bg-[#171613] px-6 pb-20 pt-36 text-white sm:px-10 lg:px-12 lg:pb-28 lg:pt-44">
@@ -32,9 +33,9 @@ export default function BookPage() {
 
       <section className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12 lg:py-28">
         <div className="mb-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {photographyServices.map((service, index) => (
+          {packages.map((service, index) => (
             <div
-              key={service.value}
+              key={service.id ?? service.serviceType}
               className="min-h-64 border border-black/10 bg-[#ebe6dd] p-6"
             >
               <div className="flex items-center justify-between">
@@ -43,7 +44,7 @@ export default function BookPage() {
                 </span>
                 <ArrowDownRight className="h-4 w-4 stroke-[1.4]" />
               </div>
-              <h2 className="mt-16 font-serif text-2xl">{service.title}</h2>
+              <h2 className="mt-16 font-serif text-2xl">{service.name}</h2>
               <p className="mt-4 text-sm leading-6 text-black/55">
                 {service.description}
               </p>
@@ -82,7 +83,7 @@ export default function BookPage() {
             </div>
           </aside>
 
-          <BookingForm />
+          <BookingForm packages={packages} />
         </div>
       </section>
     </main>
