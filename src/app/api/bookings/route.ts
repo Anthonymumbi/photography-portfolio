@@ -12,7 +12,7 @@ const bookingSchema = z.object({
   clientName: z.string().trim().min(2).max(150),
   email: z.string().trim().email().max(255),
   phone: z.string().trim().min(7).max(50),
-  serviceType: z.string().refine((value) => (serviceValues as readonly string[]).includes(value)),
+  serviceType: z.string().trim().min(2).max(80),
   packageName: z.string().trim().min(2).max(100),
   packageId: z.string().uuid().optional(),
   preferredDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
