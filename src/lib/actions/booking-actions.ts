@@ -62,6 +62,7 @@ export async function updateBookingCommercials(
     Math.round(Number(formData.get('depositAmountZmw') || 0)),
   )
   const depositStatus = String(formData.get('depositStatus') || 'unpaid')
+  const quoteNotes = String(formData.get('quoteNotes') || '').trim()
   const adminNotes = String(formData.get('adminNotes') || '').trim()
 
   if (
@@ -82,6 +83,7 @@ export async function updateBookingCommercials(
       quotedAmountZmw: quote || null,
       depositAmountZmw: deposit || null,
       depositStatus,
+      quoteNotes: quoteNotes || null,
       adminNotes: adminNotes || null,
       updatedAt: sql`CURRENT_TIMESTAMP`,
     })
@@ -121,7 +123,7 @@ export async function sendBookingQuote(
     city: booking.city,
     quotedAmountZmw: booking.quotedAmountZmw,
     depositAmountZmw: depositAmount,
-    notes: booking.adminNotes,
+    notes: booking.quoteNotes,
   })
 
   if (!sent) throw new Error('Quote email could not be sent')
