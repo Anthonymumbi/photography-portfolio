@@ -46,6 +46,10 @@ export default async function Home() {
     .from(imageData)
     .where(eq(imageData.visible, true))
     .orderBy(imageData.order)
+    .catch((error) => {
+      console.warn('[Home] Gallery database unavailable; rendering preview shell', error)
+      return []
+    })
 
   const imageUrls = result.map((item) => ({
     id: item.id,
