@@ -1,6 +1,8 @@
 'use server'
 
 import { asc, eq, sql } from 'drizzle-orm'
+import { fallbackBookingPackages } from '~/config/booking'
+import type { PublicBookingPackage } from '~/config/booking'
 import { revalidatePath } from 'next/cache'
 import { getSession } from '~/lib/auth/auth'
 import { db } from '~/server/db'
@@ -100,4 +102,34 @@ export async function updatePhotographyPackage(
 
   revalidatePath('/admin/packages')
   revalidatePath('/book')
+}
+
+
+export async function getPublicPhotographyPackages(): Promise<PublicBookingPackage[]> {
+  try {
+    const rows = await db
+      .select()
+      .from(photographyPackages)
+      .where(eq(photographyPackages.active, true))
+      .orderBy(
+        asc(photographyPackages.sortOrder),
+        asc(photographyPackages.name),
+      )
+
+    if (rows.length === 0) return fallbackBookingPackages
+
+    return rows.map((item) => ({
+      id: item.id,
+      name: item.name,
+      serviceType: item.serviceType,
+      description: item.description,
+      basePriceZmw: item.basePriceZmw,
+      depositPercent: item.depositPercent,
+      durationHours: item.durationHours,
+      deliverables: item.deliverables,
+    }))
+  } catch (error) {
+    console.warn('[Packages] Falling back to default booking packages', error)
+    return fallbackBookingPackages
+  }
 }
