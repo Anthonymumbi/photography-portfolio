@@ -28,7 +28,7 @@ export function SiteFooter() {
             </p>
             <div className="mt-5 flex flex-col gap-3 text-sm text-white/65">
               <Link href="/" className="transition hover:text-white">Portfolio</Link>
-              <Link href="/about" className="transition hover:text-white">About</Link>
+              <Link href="/book" className="transition hover:text-white">About</Link>
               <Link href="/blog" className="transition hover:text-white">Journal</Link>
               {siteConfig.features.storeEnabled && (
                 <Link href="/store" className="transition hover:text-white">Print store</Link>
@@ -62,7 +62,7 @@ export function SiteFooter() {
                 </Link>
               )}
               <Link
-                href="/about"
+                href="/book"
                 className="inline-flex items-center gap-2 transition hover:text-white"
               >
                 Enquire <ArrowUpRight className="h-4 w-4" />
