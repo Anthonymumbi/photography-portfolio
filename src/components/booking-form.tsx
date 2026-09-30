@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { ArrowRight, CheckCircle2, Loader2 } from 'lucide-react'
-import { photographyServices } from '~/config/booking'
+import type { PublicBookingPackage } from '~/config/booking'
 
 type SubmitState =
   | { status: 'idle' }
@@ -11,16 +11,21 @@ type SubmitState =
   | { status: 'success'; reference: string }
   | { status: 'error'; message: string }
 
-export function BookingForm() {
+export function BookingForm({ packages }: { packages: PublicBookingPackage[] }) {
   const [state, setState] = useState<SubmitState>({ status: 'idle' })
-  const [serviceType, setServiceType] = useState<string>(photographyServices[0].value)
+  const [selectedPackageKey, setSelectedPackageKey] = useState<string>(packages[0]?.id ?? packages[0]?.serviceType ?? '')
 
-  const packageName = useMemo(
+  const selectedPackage = useMemo(
     () =>
-      photographyServices.find((service) => service.value === serviceType)
-        ?.packageName ?? photographyServices[0].packageName,
-    [serviceType],
+      packages.find(
+        (item) => (item.id ?? item.serviceType) === selectedPackageKey,
+      ) ?? packages[0],
+    [packages, selectedPackageKey],
   )
+
+  const packageName = selectedPackage?.name ?? 'Photography Session'
+  const serviceType = selectedPackage?.serviceType ?? 'portrait'
+
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -36,6 +41,7 @@ export function BookingForm() {
       phone: formData.get('phone'),
       serviceType,
       packageName,
+      packageId: selectedPackage?.id ?? undefined,
       preferredDate: formData.get('preferredDate'),
       preferredTime: formData.get('preferredTime') || undefined,
       city: formData.get('city'),
@@ -67,7 +73,7 @@ export function BookingForm() {
         reference: result.reference || 'REQUESTED',
       })
       form.reset()
-      setServiceType(photographyServices[0].value)
+      setSelectedPackageKey(packages[0]?.id ?? packages[0]?.serviceType ?? '')
     } catch (error) {
       setState({
         status: 'error',
@@ -141,16 +147,22 @@ export function BookingForm() {
           />
         </Field>
 
-        <Field label="Photography service">
+        <Field label="Photography package">
           <select
-            name="serviceType"
-            value={serviceType}
-            onChange={(event) => setServiceType(event.target.value)}
+            name="package"
+            value={selectedPackageKey}
+            onChange={(event) => setSelectedPackageKey(event.target.value)}
             className="booking-input"
           >
-            {photographyServices.map((service) => (
-              <option key={service.value} value={service.value}>
-                {service.title}
+            {packages.map((item) => (
+              <option
+                key={item.id ?? item.serviceType}
+                value={item.id ?? item.serviceType}
+              >
+                {item.name}
+                {item.basePriceZmw > 0
+                  ? ` — from K${item.basePriceZmw.toLocaleString()}`
+                  : ' — custom quote'}
               </option>
             ))}
           </select>
@@ -215,6 +227,37 @@ export function BookingForm() {
           </label>
         </div>
       </div>
+
+      {selectedPackage && (
+        <div className="mt-6 border border-black/10 bg-[#f4f1eb] p-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/45">
+                Selected package
+              </p>
+              <h3 className="mt-2 font-serif text-2xl">{selectedPackage.name}</h3>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-black/55">
+                {selectedPackage.description}
+              </p>
+              {selectedPackage.deliverables && (
+                <p className="mt-3 text-xs leading-5 text-black/45">
+                  {selectedPackage.deliverables}
+                </p>
+              )}
+            </div>
+            <div className="shrink-0 text-left sm:text-right">
+              <p className="text-sm font-semibold">
+                {selectedPackage.basePriceZmw > 0
+                  ? `From K${selectedPackage.basePriceZmw.toLocaleString()}`
+                  : 'Custom quote'}
+              </p>
+              <p className="mt-1 text-xs text-black/45">
+                {selectedPackage.depositPercent}% deposit after confirmation
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Field label="Tell us about the shoot" className="mt-6">
         <textarea
