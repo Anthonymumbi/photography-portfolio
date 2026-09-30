@@ -4,8 +4,10 @@ import { Resend } from 'resend'
 import { env } from '~/env.js'
 import { siteConfig } from '~/config/site'
 import {
+  BookingConfirmedEmail,
   BookingQuoteEmail,
   BookingRequestEmail,
+  bookingConfirmedEmailText,
   bookingQuoteEmailText,
   bookingRequestEmailText,
 } from '~/components/emails/booking'
@@ -114,6 +116,41 @@ export async function sendBookingQuoteEmail(data: BookingEmailData & {
     return true
   } catch (error) {
     console.error('[Booking Email] Quote email error', error)
+    return false
+  }
+}
+
+
+export async function sendBookingConfirmedEmail(
+  data: BookingEmailData,
+): Promise<boolean> {
+  try {
+    const props = {
+      reference: data.reference,
+      clientName: data.clientName,
+      packageName: data.packageName,
+      preferredDate: data.preferredDate,
+      preferredTime: data.preferredTime,
+      city: data.city,
+    }
+
+    const result = await resend.emails.send({
+      from: `Photography <${siteConfig.emails.noReply}>`,
+      to: [data.email],
+      subject: `Booking confirmed — ${data.reference}`,
+      replyTo: siteConfig.emails.replyTo,
+      react: BookingConfirmedEmail(props),
+      text: bookingConfirmedEmailText(props),
+    })
+
+    if (result.error) {
+      console.error('[Booking Email] Confirmation email failed', result.error)
+      return false
+    }
+
+    return true
+  } catch (error) {
+    console.error('[Booking Email] Confirmation email error', error)
     return false
   }
 }
