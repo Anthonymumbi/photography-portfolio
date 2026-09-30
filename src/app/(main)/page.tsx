@@ -145,7 +145,7 @@ export default async function Home() {
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/about"
+                href="/book"
                 className="inline-flex items-center justify-center gap-3 border border-white/35 px-6 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:border-white hover:bg-white/10"
               >
                 Start a conversation
@@ -269,7 +269,7 @@ export default async function Home() {
           Let&apos;s make photographs you&apos;ll want to return to.
         </h2>
         <Link
-          href="/about"
+          href="/book"
           className="mt-10 inline-flex items-center gap-3 border-b border-black pb-2 text-xs font-semibold uppercase tracking-[0.22em]"
         >
           Begin your enquiry
