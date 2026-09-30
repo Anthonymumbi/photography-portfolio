@@ -1089,6 +1089,7 @@ export const bookings = pgTable(
       .notNull()
       .default('unpaid'),
     message: text('message'),
+    quoteNotes: text('quoteNotes'),
     adminNotes: text('adminNotes'),
     createdAt: timestamp('createdAt').defaultNow().notNull(),
     updatedAt: timestamp('updatedAt').defaultNow().notNull(),
