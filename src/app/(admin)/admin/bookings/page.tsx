@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import {
   CalendarDays,
@@ -222,14 +223,26 @@ export default async function BookingsAdminPage() {
                       </div>
                       <label className="sm:col-span-2 lg:col-span-4">
                         <span className="mb-2 block text-xs font-medium text-muted-foreground">
-                          Internal / quote notes
+                          Client quote notes
+                        </span>
+                        <textarea
+                          name="quoteNotes"
+                          rows={3}
+                          defaultValue={booking.quoteNotes ?? ''}
+                          className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                          placeholder="Travel, overtime, inclusions or terms the client should see..."
+                        />
+                      </label>
+                      <label className="sm:col-span-2 lg:col-span-4">
+                        <span className="mb-2 block text-xs font-medium text-muted-foreground">
+                          Private admin notes
                         </span>
                         <textarea
                           name="adminNotes"
-                          rows={3}
+                          rows={2}
                           defaultValue={booking.adminNotes ?? ''}
                           className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                          placeholder="Travel, overtime, inclusions, special terms..."
+                          placeholder="Internal notes — never sent to the client."
                         />
                       </label>
                     </form>
@@ -301,7 +314,7 @@ function AdminField({
   children,
 }: {
   label: string
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
     <label>
