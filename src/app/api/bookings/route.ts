@@ -10,7 +10,7 @@ const bookingSchema = z.object({
   clientName: z.string().trim().min(2).max(150),
   email: z.string().trim().email().max(255),
   phone: z.string().trim().min(7).max(50),
-  serviceType: z.string().refine((value) => serviceValues.includes(value as never)),
+  serviceType: z.string().refine((value) => (serviceValues as readonly string[]).includes(value)),
   packageName: z.string().trim().min(2).max(100),
   preferredDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   preferredTime: z.string().trim().max(30).optional(),
@@ -18,7 +18,7 @@ const bookingSchema = z.object({
   location: z.string().trim().max(255).optional(),
   budgetZmw: z.number().int().positive().max(10000000).optional(),
   message: z.string().trim().max(2500).optional(),
-  companyWebsite: z.string().max(0).optional(),
+  companyWebsite: z.string().max(200).optional(),
 })
 
 export async function POST(request: Request) {
