@@ -1,113 +1,79 @@
-import { siteConfig } from '~/config/site'
-import { cn } from '~/lib/utils'
-import { Icons } from '~/components/ui/icons'
-import { buttonVariants } from '~/components/ui/button'
 import Link from 'next/link'
-import { Instagram, Twitter, Facebook } from 'lucide-react'
+import { Instagram, Facebook, ArrowUpRight } from 'lucide-react'
+import { siteConfig } from '~/config/site'
 
 export function SiteFooter() {
+  const brandName =
+    siteConfig.ownerName === 'Photographer Name'
+      ? siteConfig.title
+      : siteConfig.ownerName
+
   return (
-    <footer className="fixed bottom-0 left-0 z-40 w-full border-t border-border/40 bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
-      <div className="container flex h-14 max-w-(--breakpoint-2xl) items-center">
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="w-full flex-1 md:w-auto md:flex-none"></div>
-          <nav className="flex items-center">
-            {siteConfig.links.instagram && (
-              <Link
-                href={siteConfig.links.instagram}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div
-                  className={cn(
-                    buttonVariants({
-                      variant: 'ghost',
-                    }),
-                    'w-9 px-0',
-                  )}
+    <footer className="border-t border-white/10 bg-[#0d0d0c] text-white">
+      <div className="mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-12 lg:py-20">
+        <div className="grid gap-14 lg:grid-cols-[1.4fr_0.6fr_0.6fr]">
+          <div>
+            <Link href="/" className="font-serif text-3xl tracking-tight">
+              {brandName}
+            </Link>
+            <p className="mt-5 max-w-md text-sm leading-7 text-white/45">
+              Thoughtful photography for people, celebrations and brands —
+              created with a documentary eye and an editorial finish.
+            </p>
+          </div>
+
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/35">
+              Explore
+            </p>
+            <div className="mt-5 flex flex-col gap-3 text-sm text-white/65">
+              <Link href="/" className="transition hover:text-white">Portfolio</Link>
+              <Link href="/about" className="transition hover:text-white">About</Link>
+              <Link href="/blog" className="transition hover:text-white">Journal</Link>
+              {siteConfig.features.storeEnabled && (
+                <Link href="/store" className="transition hover:text-white">Print store</Link>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/35">
+              Connect
+            </p>
+            <div className="mt-5 flex flex-col gap-3 text-sm text-white/65">
+              {siteConfig.links.instagram && (
+                <Link
+                  href={siteConfig.links.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 transition hover:text-white"
                 >
-                  <Instagram className="h-4 w-4" />
-                  <span className="sr-only">Instagram</span>
-                </div>
-              </Link>
-            )}
-            {siteConfig.links.twitter && (
-              <Link
-                href={siteConfig.links.twitter}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div
-                  className={cn(
-                    buttonVariants({
-                      variant: 'ghost',
-                    }),
-                    'w-9 px-0',
-                  )}
+                  <Instagram className="h-4 w-4" /> Instagram
+                </Link>
+              )}
+              {siteConfig.links.facebook && (
+                <Link
+                  href={siteConfig.links.facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 transition hover:text-white"
                 >
-                  <Twitter className="h-4 w-4" />
-                  <span className="sr-only">Twitter</span>
-                </div>
-              </Link>
-            )}
-            {siteConfig.links.facebook && (
+                  <Facebook className="h-4 w-4" /> Facebook
+                </Link>
+              )}
               <Link
-                href={siteConfig.links.facebook}
-                target="_blank"
-                rel="noreferrer"
+                href="/about"
+                className="inline-flex items-center gap-2 transition hover:text-white"
               >
-                <div
-                  className={cn(
-                    buttonVariants({
-                      variant: 'ghost',
-                    }),
-                    'w-9 px-0',
-                  )}
-                >
-                  <Facebook className="h-4 w-4" />
-                  <span className="sr-only">Facebook</span>
-                </div>
+                Enquire <ArrowUpRight className="h-4 w-4" />
               </Link>
-            )}
-            {siteConfig.links.github && (
-              <Link
-                href={siteConfig.links.github}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div
-                  className={cn(
-                    buttonVariants({
-                      variant: 'ghost',
-                    }),
-                    'w-9 px-0',
-                  )}
-                >
-                  <Icons.gitHub className="h-4 w-4" />
-                  <span className="sr-only">GitHub</span>
-                </div>
-              </Link>
-            )}
-            {siteConfig.links.website && (
-              <Link
-                href={siteConfig.links.website}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div
-                  className={cn(
-                    buttonVariants({
-                      variant: 'ghost',
-                    }),
-                    'w-9 px-0',
-                  )}
-                >
-                  <Icons.logo className="h-6 w-6 fill-current" />
-                  <span className="sr-only">website</span>
-                </div>
-              </Link>
-            )}
-          </nav>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 text-[10px] uppercase tracking-[0.18em] text-white/30 sm:flex-row sm:items-center sm:justify-between">
+          <span>© {new Date().getFullYear()} {brandName}</span>
+          <span>Photography • Film • Stories</span>
         </div>
       </div>
     </footer>
