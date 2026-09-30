@@ -3,7 +3,7 @@
 import { desc, eq, sql } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import { getSession } from '~/lib/auth/auth'
-import { sendBookingQuoteEmail } from '~/lib/email/booking-email-service'
+import { sendBookingConfirmedEmail, sendBookingQuoteEmail } from '~/lib/email/booking-email-service'
 import { db } from '~/server/db'
 import { bookings, bookingStatuses } from '~/server/db/schema'
 
@@ -36,6 +36,15 @@ export async function updateBookingStatus(
     throw new Error('Invalid booking status')
   }
 
+  const existing = await db
+    .select()
+    .from(bookings)
+    .where(eq(bookings.id, bookingId))
+    .limit(1)
+    .then((rows) => rows[0])
+
+  if (!existing) throw new Error('Booking not found')
+
   await db
     .update(bookings)
     .set({
@@ -43,6 +52,20 @@ export async function updateBookingStatus(
       updatedAt: sql`CURRENT_TIMESTAMP`,
     })
     .where(eq(bookings.id, bookingId))
+
+  if (status === 'confirmed' && existing.status !== 'confirmed') {
+    const reference = `PH-${String(existing.bookingNumber).padStart(5, '0')}`
+    void sendBookingConfirmedEmail({
+      reference,
+      clientName: existing.clientName,
+      email: existing.email,
+      phone: existing.phone,
+      packageName: existing.packageName,
+      preferredDate: existing.preferredDate,
+      preferredTime: existing.preferredTime,
+      city: existing.city,
+    })
+  }
 
   revalidatePath('/admin/bookings')
 }
