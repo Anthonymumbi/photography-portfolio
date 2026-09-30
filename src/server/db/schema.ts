@@ -1021,3 +1021,54 @@ export type VideoAccessLog = typeof videoAccessLogs.$inferSelect
 export type VideoAccessToken = typeof videoAccessTokens.$inferSelect
 export type VideoComment = typeof videoComments.$inferSelect
 export type VideoCommentInsert = typeof videoComments.$inferInsert
+
+
+export const bookingStatuses = [
+  'requested',
+  'confirmed',
+  'scheduled',
+  'shoot_completed',
+  'editing',
+  'gallery_ready',
+  'completed',
+  'cancelled',
+] as const
+export type BookingStatus = (typeof bookingStatuses)[number]
+
+export const bookings = pgTable(
+  'bookings',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    bookingNumber: serial('bookingNumber').notNull(),
+    status: text('status', { enum: bookingStatuses })
+      .notNull()
+      .default('requested'),
+    clientName: varchar('clientName', { length: 150 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    phone: varchar('phone', { length: 50 }).notNull(),
+    serviceType: varchar('serviceType', { length: 80 }).notNull(),
+    packageName: varchar('packageName', { length: 100 }).notNull(),
+    preferredDate: varchar('preferredDate', { length: 10 }).notNull(),
+    preferredTime: varchar('preferredTime', { length: 30 }),
+    city: varchar('city', { length: 100 }).notNull(),
+    location: varchar('location', { length: 255 }),
+    budgetZmw: integer('budgetZmw'),
+    quotedAmountZmw: integer('quotedAmountZmw'),
+    depositAmountZmw: integer('depositAmountZmw'),
+    depositStatus: varchar('depositStatus', { length: 20 })
+      .notNull()
+      .default('unpaid'),
+    message: text('message'),
+    adminNotes: text('adminNotes'),
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
+    updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  },
+  (table) => ({
+    statusIndex: index('bookings_status_idx').on(table.status),
+    preferredDateIndex: index('bookings_preferred_date_idx').on(
+      table.preferredDate,
+    ),
+    emailIndex: index('bookings_email_idx').on(table.email),
+    createdAtIndex: index('bookings_created_at_idx').on(table.createdAt),
+  }),
+)
