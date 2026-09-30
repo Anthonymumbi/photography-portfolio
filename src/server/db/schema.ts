@@ -1023,6 +1023,35 @@ export type VideoComment = typeof videoComments.$inferSelect
 export type VideoCommentInsert = typeof videoComments.$inferInsert
 
 
+export const photographyPackages = pgTable(
+  'photographyPackages',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    name: varchar('name', { length: 120 }).notNull(),
+    slug: varchar('slug', { length: 140 }).notNull().unique(),
+    serviceType: varchar('serviceType', { length: 80 }).notNull(),
+    description: text('description').notNull(),
+    durationHours: integer('durationHours'),
+    basePriceZmw: integer('basePriceZmw').default(0).notNull(),
+    depositPercent: integer('depositPercent').default(30).notNull(),
+    deliverables: text('deliverables'),
+    active: boolean('active').default(true).notNull(),
+    featured: boolean('featured').default(false).notNull(),
+    sortOrder: integer('sortOrder').default(0).notNull(),
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
+    updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  },
+  (table) => ({
+    activeIndex: index('photography_packages_active_idx').on(table.active),
+    serviceTypeIndex: index('photography_packages_service_type_idx').on(
+      table.serviceType,
+    ),
+    sortOrderIndex: index('photography_packages_sort_order_idx').on(
+      table.sortOrder,
+    ),
+  }),
+)
+
 export const bookingStatuses = [
   'requested',
   'confirmed',
@@ -1047,6 +1076,7 @@ export const bookings = pgTable(
     email: varchar('email', { length: 255 }).notNull(),
     phone: varchar('phone', { length: 50 }).notNull(),
     serviceType: varchar('serviceType', { length: 80 }).notNull(),
+    packageId: uuid('packageId').references(() => photographyPackages.id, { onDelete: 'set null' }),
     packageName: varchar('packageName', { length: 100 }).notNull(),
     preferredDate: varchar('preferredDate', { length: 10 }).notNull(),
     preferredTime: varchar('preferredTime', { length: 30 }),
