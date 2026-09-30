@@ -145,3 +145,54 @@ ${props.notes || ''}
 
 Reply to this email if you need any adjustment before confirming the booking.`
 }
+
+
+export function BookingConfirmedEmail(props: BaseBookingEmailProps) {
+  return (
+    <Html>
+      <Head />
+      <Preview>Your photography booking is confirmed — {props.reference}</Preview>
+      <Tailwind>
+        <Body className="bg-[#f4f1eb] font-sans text-[#171613]">
+          <Container className="mx-auto my-10 max-w-xl bg-white p-8">
+            <Text className="text-xs uppercase tracking-widest text-[#8c6b43]">
+              Booking confirmed
+            </Text>
+            <Heading className="font-serif text-3xl font-normal">
+              Your date is confirmed.
+            </Heading>
+            <Text className="text-sm leading-6 text-neutral-600">
+              Hi {props.clientName}, your photography booking is now confirmed.
+              We&apos;ll use the details below as the working schedule and stay in
+              touch as the session approaches.
+            </Text>
+            <Section className="my-6 bg-[#f4f1eb] p-5">
+              <Text className="m-0 text-sm"><strong>Reference:</strong> {props.reference}</Text>
+              <Text className="mb-0 text-sm"><strong>Package:</strong> {props.packageName}</Text>
+              <Text className="mb-0 text-sm"><strong>Date:</strong> {props.preferredDate}{props.preferredTime ? ` • ${props.preferredTime}` : ''}</Text>
+              <Text className="mb-0 text-sm"><strong>Location:</strong> {props.city}</Text>
+            </Section>
+            <Hr className="border-neutral-200" />
+            <Text className="text-xs leading-5 text-neutral-500">
+              Reply to this email if the schedule, venue or contact details change.
+            </Text>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  )
+}
+
+export function bookingConfirmedEmailText(props: BaseBookingEmailProps) {
+  return `Photography booking confirmed — ${props.reference}
+
+Hi ${props.clientName},
+
+Your photography booking is confirmed.
+
+Package: ${props.packageName}
+Date: ${props.preferredDate}${props.preferredTime ? ` • ${props.preferredTime}` : ''}
+Location: ${props.city}
+
+Reply to this email if the schedule, venue or contact details change.`
+}
