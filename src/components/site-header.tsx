@@ -97,7 +97,7 @@ export async function SiteHeader() {
             href="/book"
             className="ml-2 inline-flex items-center gap-2 border border-white/25 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white transition hover:border-white hover:bg-white hover:text-black sm:px-5"
           >
-            Enquire
+            Book session
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </nav>
