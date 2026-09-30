@@ -3,18 +3,10 @@ import { getSession } from '~/lib/auth/auth'
 import { logout } from '~/lib/auth/userActions'
 import { getServerSiteConfig } from '~/config/site'
 import { cn } from '~/lib/utils'
-import { Icons } from '~/components/ui/icons'
 import { MainNav } from '~/components/main-nav'
 import { buttonVariants } from '~/components/ui/button'
 import { Button } from '~/components/ui/button'
-import {
-  Instagram,
-  Twitter,
-  Facebook,
-  User,
-  Settings,
-  Shield,
-} from 'lucide-react'
+import { Instagram, User, Settings, Shield, ArrowUpRight } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,112 +23,30 @@ export async function SiteHeader() {
   const siteConfig = getServerSiteConfig()
 
   return (
-    <header className="border-border/40 bg-background/95 supports-backdrop-filter:bg-background/60 fixed top-0 z-40 w-full border-b backdrop-blur-sm">
-      <div className="container flex h-14 max-w-(--breakpoint-2xl) items-center justify-between">
+    <header className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/55 text-white backdrop-blur-xl">
+      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-12">
         <MainNav isAdmin={isAdmin} siteConfig={siteConfig} />
-        <nav className="flex items-center">
-          {/* Social Media Links */}
+
+        <nav className="flex items-center gap-1">
           {siteConfig.links.instagram && (
             <Link
               href={siteConfig.links.instagram}
               target="_blank"
               rel="noreferrer"
+              className="hidden h-9 w-9 items-center justify-center text-white/60 transition hover:text-white sm:inline-flex"
             >
-              <div
-                className={cn(
-                  buttonVariants({
-                    variant: 'ghost',
-                  }),
-                  'w-9 px-0',
-                )}
-              >
-                <Instagram className="h-4 w-4" />
-                <span className="sr-only">Instagram</span>
-              </div>
-            </Link>
-          )}
-          {siteConfig.links.twitter && (
-            <Link
-              href={siteConfig.links.twitter}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div
-                className={cn(
-                  buttonVariants({
-                    variant: 'ghost',
-                  }),
-                  'w-9 px-0',
-                )}
-              >
-                <Twitter className="h-4 w-4" />
-                <span className="sr-only">Twitter</span>
-              </div>
-            </Link>
-          )}
-          {siteConfig.links.facebook && (
-            <Link
-              href={siteConfig.links.facebook}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div
-                className={cn(
-                  buttonVariants({
-                    variant: 'ghost',
-                  }),
-                  'w-9 px-0',
-                )}
-              >
-                <Facebook className="h-4 w-4" />
-                <span className="sr-only">Facebook</span>
-              </div>
-            </Link>
-          )}
-          {siteConfig.links.github && (
-            <Link
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div
-                className={cn(
-                  buttonVariants({
-                    variant: 'ghost',
-                  }),
-                  'w-9 px-0',
-                )}
-              >
-                <Icons.gitHub className="h-4 w-4" />
-                <span className="sr-only">GitHub</span>
-              </div>
-            </Link>
-          )}
-          {siteConfig.links.website && (
-            <Link
-              href={siteConfig.links.website}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div
-                className={cn(
-                  buttonVariants({
-                    variant: 'ghost',
-                  }),
-                  'w-9 px-0',
-                )}
-              >
-                <Icons.logo className="h-6 w-6 fill-current" />
-                <span className="sr-only">Website</span>
-              </div>
+              <Instagram className="h-4 w-4" />
+              <span className="sr-only">Instagram</span>
             </Link>
           )}
 
-          {/* Profile Dropdown - only show if user is logged in */}
           {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-9 px-0">
+                <Button
+                  variant="ghost"
+                  className="w-9 px-0 text-white/70 hover:bg-white/10 hover:text-white"
+                >
                   <User className="h-4 w-4" />
                   <span className="sr-only">User menu</span>
                 </Button>
@@ -175,15 +85,21 @@ export async function SiteHeader() {
             <Link
               href="/signin"
               className={cn(
-                buttonVariants({
-                  variant: 'ghost',
-                }),
-                'w-auto px-3',
+                buttonVariants({ variant: 'ghost' }),
+                'hidden px-3 text-xs uppercase tracking-[0.15em] text-white/60 hover:bg-white/10 hover:text-white sm:inline-flex',
               )}
             >
-              Sign In
+              Client login
             </Link>
           )}
+
+          <Link
+            href="/about"
+            className="ml-2 inline-flex items-center gap-2 border border-white/25 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white transition hover:border-white hover:bg-white hover:text-black sm:px-5"
+          >
+            Enquire
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </Link>
         </nav>
       </div>
     </header>
