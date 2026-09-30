@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import type { InputHTMLAttributes } from 'react'
 import {
   createPhotographyPackage,
   getPhotographyPackages,
@@ -105,7 +106,7 @@ export default async function PackagesAdminPage() {
   )
 }
 
-function Input(props: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+function Input(props: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
   const { label, ...inputProps } = props
   return (
     <label>
