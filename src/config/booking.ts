@@ -1,3 +1,14 @@
+export type PublicBookingPackage = {
+  id: string | null
+  name: string
+  serviceType: string
+  description: string
+  basePriceZmw: number
+  depositPercent: number
+  durationHours: number | null
+  deliverables: string | null
+}
+
 export const photographyServices = [
   {
     value: 'wedding',
@@ -28,6 +39,18 @@ export const photographyServices = [
     packageName: 'Brand & Corporate',
   },
 ] as const
+
+export const fallbackBookingPackages: PublicBookingPackage[] =
+  photographyServices.map((service) => ({
+    id: null,
+    name: service.packageName,
+    serviceType: service.value,
+    description: service.description,
+    basePriceZmw: 0,
+    depositPercent: 30,
+    durationHours: null,
+    deliverables: null,
+  }))
 
 export const bookingStatusLabels = {
   requested: 'Requested',
