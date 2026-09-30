@@ -35,8 +35,8 @@ const MainNavItems = ({ pathname, galleries, isAdmin }: NavItemsProps) => (
     <Link
       href="/blog"
       className={cn(
-        'hover:text-foreground/80 transition-colors',
-        pathname === '/blog' ? 'text-foreground' : 'text-foreground/60',
+        'transition-colors hover:text-white',
+        pathname === '/blog' ? 'text-white' : 'text-white/60',
       )}
     >
       Blog
@@ -44,7 +44,7 @@ const MainNavItems = ({ pathname, galleries, isAdmin }: NavItemsProps) => (
     <Link
       href="/about"
       className={cn(
-        'text-foreground/60 hover:text-foreground/80 transition-colors',
+        'text-white/60 transition-colors hover:text-white',
       )}
     >
       About
@@ -53,7 +53,7 @@ const MainNavItems = ({ pathname, galleries, isAdmin }: NavItemsProps) => (
       <Link
         href="/store"
         className={cn(
-          'text-foreground/60 hover:text-foreground/80 transition-colors',
+          'text-white/60 transition-colors hover:text-white',
         )}
       >
         Store
@@ -65,10 +65,10 @@ const MainNavItems = ({ pathname, galleries, isAdmin }: NavItemsProps) => (
           <Button
             variant="ghost"
             className={cn(
-              'text-foreground/60 hover:text-foreground/80 h-auto p-0 text-sm font-normal hover:bg-transparent',
+              'h-auto p-0 text-sm font-normal text-white/60 transition-colors hover:bg-transparent hover:text-white',
               pathname?.startsWith('/g/')
-                ? 'text-foreground'
-                : 'text-foreground/60',
+                ? 'text-white'
+                : 'text-white/60',
             )}
           >
             Galleries
@@ -88,10 +88,10 @@ const MainNavItems = ({ pathname, galleries, isAdmin }: NavItemsProps) => (
       <Link
         href="/admin"
         className={cn(
-          'text-foreground/60 hover:text-foreground/80 transition-colors',
+          'text-white/60 transition-colors hover:text-white',
           pathname?.startsWith('/admin')
-            ? 'text-foreground'
-            : 'text-foreground/60',
+            ? 'text-white'
+            : 'text-white/60',
         )}
       >
         Admin
@@ -110,18 +110,16 @@ const SheetNavItems = ({
     <Link
       href="/blog"
       className={cn(
-        'hover:text-foreground/80 transition-colors',
+        'text-foreground/60 transition-colors hover:text-foreground',
         pathname === '/blog' ? 'text-foreground' : 'text-foreground/60',
       )}
       onClick={onLinkClick}
     >
-      Blog
+      Journal
     </Link>
     <Link
       href="/about"
-      className={cn(
-        'text-foreground/60 hover:text-foreground/80 transition-colors',
-      )}
+      className="text-foreground/60 transition-colors hover:text-foreground"
       onClick={onLinkClick}
     >
       About
@@ -129,23 +127,21 @@ const SheetNavItems = ({
     {isStoreEnabledClient() && (
       <Link
         href="/store"
-        className={cn(
-          'text-foreground/60 hover:text-foreground/80 transition-colors',
-        )}
+        className="text-foreground/60 transition-colors hover:text-foreground"
         onClick={onLinkClick}
       >
-        Store
+        Prints
       </Link>
     )}
     {galleries.length > 0 && (
       <div className="flex flex-col gap-2">
-        <span className="text-foreground/60 font-medium">Galleries</span>
+        <span className="text-foreground/60 font-medium">Work</span>
         {galleries.map((gallery) => (
           <Link
             key={gallery.id}
             href={`/g/${gallery.slug}`}
             className={cn(
-              'text-foreground/60 hover:text-foreground/80 pl-4 transition-colors',
+              'pl-4 transition-colors hover:text-foreground',
               pathname === `/g/${gallery.slug}`
                 ? 'text-foreground'
                 : 'text-foreground/60',
@@ -161,7 +157,7 @@ const SheetNavItems = ({
       <Link
         href="/admin"
         className={cn(
-          'text-foreground/60 hover:text-foreground/80 transition-colors',
+          'transition-colors hover:text-foreground',
           pathname?.startsWith('/admin')
             ? 'text-foreground'
             : 'text-foreground/60',
@@ -213,7 +209,7 @@ export function MainNav({ isAdmin, siteConfig }: MainNavProps) {
             variant="ghost"
             className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
           >
-            <MenuIcon className="h-6 w-6" />
+            <MenuIcon className="h-5 w-5" />
             <span className="sr-only">Toggle menu</span>
           </Button>
         </SheetTrigger>
@@ -226,7 +222,9 @@ export function MainNav({ isAdmin, siteConfig }: MainNavProps) {
             >
               <Icons.logo className="h-6 w-6" />
               <span className="font-serif text-lg font-semibold">
-                {siteConfig.title}
+                {siteConfig.ownerName === 'Photographer Name'
+                  ? siteConfig.title
+                  : siteConfig.ownerName}
               </span>
             </Link>
           </div>
@@ -241,10 +239,12 @@ export function MainNav({ isAdmin, siteConfig }: MainNavProps) {
         </SheetContent>
       </Sheet>
       <div className="hidden md:flex">
-        <Link href="/" className="mr-6 flex items-center space-x-2">
+        <Link href="/" className="mr-8 flex items-center space-x-2 text-white">
           <Icons.logo className="h-6 w-6" />
-          <span className="font-serif text-lg font-semibold">
-            {siteConfig.title}
+          <span className="font-serif text-lg font-semibold tracking-wide">
+            {siteConfig.ownerName === 'Photographer Name'
+              ? siteConfig.title
+              : siteConfig.ownerName}
           </span>
         </Link>
         <MainNavItems

@@ -1,6 +1,8 @@
-import { ImageIcon, PenIcon, InfoIcon, StoreIcon, UserIcon, HomeIcon, LogOutIcon, BookOpenText, ImagesIcon, FilmIcon, FileVideoIcon, ReceiptPoundSterlingIcon, DownloadIcon, GalleryThumbnailsIcon, FolderOpenIcon, SettingsIcon, Database } from 'lucide-react'
+import { ImageIcon, PenIcon, InfoIcon, StoreIcon, UserIcon, HomeIcon, LogOutIcon, BookOpenText, ImagesIcon, FilmIcon, FileVideoIcon, ReceiptPoundSterlingIcon, DownloadIcon, GalleryThumbnailsIcon, FolderOpenIcon, SettingsIcon, Database, CalendarDays, BadgeDollarSign } from 'lucide-react'
 
 export const adminSections = [
+  { title: 'Bookings', description: 'Manage photography enquiries and shoot status', icon: CalendarDays, href: '/admin/bookings' },
+  { title: 'Packages & Pricing', description: 'Set photography packages, ZMW prices and deposits', icon: BadgeDollarSign, href: '/admin/packages' },
   { title: 'Image Upload', description: 'Manage and upload images', icon: ImageIcon, href: '/admin/upload' },
   { title: 'Image Management', description: 'Delete, hide, and reorder images', icon: ImagesIcon, href: '/admin/manage'},
   { title: 'Image Migration', description: 'Export and import image data', icon: DownloadIcon, href: '/admin/migrate'},

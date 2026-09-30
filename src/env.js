@@ -1,6 +1,12 @@
 import { createEnv } from '@t3-oss/env-nextjs'
 import { z } from 'zod'
 
+const isVercelPreview = process.env.VERCEL_ENV === 'preview'
+const previewSiteUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : 'http://localhost:3000'
+
+
 export const env = createEnv({
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app
@@ -39,30 +45,30 @@ export const env = createEnv({
   },
 
   runtimeEnv: {
-    DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL: process.env.DATABASE_URL ?? (isVercelPreview ? 'postgresql://preview:preview@localhost:5432/preview' : undefined),
     NODE_ENV: process.env.NODE_ENV,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
-    R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
-    R2_IMAGE_BUCKET_NAME: process.env.R2_IMAGE_BUCKET_NAME,
-    R2_BLOG_IMG_BUCKET_NAME: process.env.R2_BLOG_IMG_BUCKET_NAME,
-    R2_ABOUT_IMG_BUCKET_NAME: process.env.R2_ABOUT_IMG_BUCKET_NAME,
-    R2_CUSTOM_IMG_BUCKET_NAME: process.env.R2_CUSTOM_IMG_BUCKET_NAME,
-    R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID,
-    R2_REGION: process.env.R2_REGION,
-    EDGE_CONFIG: process.env.EDGE_CONFIG,
-    FLAGS_SECRET: process.env.FLAGS_SECRET,
-    JWT_SECRET: process.env.JWT_SECRET,
-    JWT_EXPIRATION_HOURS: process.env.JWT_EXPIRATION_HOURS,
-    SITE_URL: process.env.SITE_URL,
-    ADMIN_EMAIL: process.env.ADMIN_EMAIL,
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID ?? (isVercelPreview ? 'preview-access-key' : undefined),
+    R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY ?? (isVercelPreview ? 'preview-secret-key' : undefined),
+    R2_IMAGE_BUCKET_NAME: process.env.R2_IMAGE_BUCKET_NAME ?? (isVercelPreview ? 'preview-images' : undefined),
+    R2_BLOG_IMG_BUCKET_NAME: process.env.R2_BLOG_IMG_BUCKET_NAME ?? (isVercelPreview ? 'preview-blog' : undefined),
+    R2_ABOUT_IMG_BUCKET_NAME: process.env.R2_ABOUT_IMG_BUCKET_NAME ?? (isVercelPreview ? 'preview-about' : undefined),
+    R2_CUSTOM_IMG_BUCKET_NAME: process.env.R2_CUSTOM_IMG_BUCKET_NAME ?? (isVercelPreview ? 'preview-custom' : undefined),
+    R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID ?? (isVercelPreview ? 'preview-account' : undefined),
+    R2_REGION: process.env.R2_REGION ?? (isVercelPreview ? 'auto' : undefined),
+    EDGE_CONFIG: process.env.EDGE_CONFIG ?? (isVercelPreview ? 'https://edge-config.vercel.com/preview' : undefined),
+    FLAGS_SECRET: process.env.FLAGS_SECRET ?? (isVercelPreview ? 'preview-flags-secret-32-characters-minimum' : undefined),
+    JWT_SECRET: process.env.JWT_SECRET ?? (isVercelPreview ? 'preview-jwt-secret-32-characters-minimum' : undefined),
+    JWT_EXPIRATION_HOURS: process.env.JWT_EXPIRATION_HOURS ?? (isVercelPreview ? '168' : undefined),
+    SITE_URL: process.env.SITE_URL ?? (isVercelPreview ? previewSiteUrl : undefined),
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? (isVercelPreview ? 'preview@example.com' : undefined),
+    RESEND_API_KEY: process.env.RESEND_API_KEY ?? (isVercelPreview ? 're_preview' : undefined),
     GOOGLE_GENERATIVE_AI_API_KEY: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
     CRON_SECRET: process.env.CRON_SECRET,
-    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
-    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL ?? (isVercelPreview ? 'https://preview.upstash.io' : undefined),
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN ?? (isVercelPreview ? 'preview-token' : undefined),
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

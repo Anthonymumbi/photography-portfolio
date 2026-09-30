@@ -4,6 +4,8 @@ import { SiteFooter } from '~/components/site-footer'
 import Script from 'next/script'
 import { generateSEOMetadata, generateStructuredData } from '~/lib/seo-utils'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = generateSEOMetadata({
   type: 'home',
   title: `${siteConfig.ownerName} | ${siteConfig.title}`,

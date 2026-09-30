@@ -7,6 +7,8 @@ import { StorageAlertProvider } from '~/components/storage-alert-provider'
 import { getServerSiteConfig } from '~/config/site'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: {
     template: '%s | Admin Dashboard',
