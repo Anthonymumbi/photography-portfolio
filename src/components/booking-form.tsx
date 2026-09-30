@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import type { FormEvent, ReactNode } from 'react'
 import { ArrowRight, CheckCircle2, Loader2 } from 'lucide-react'
 import { photographyServices } from '~/config/booking'
 
@@ -12,7 +13,7 @@ type SubmitState =
 
 export function BookingForm() {
   const [state, setState] = useState<SubmitState>({ status: 'idle' })
-  const [serviceType, setServiceType] = useState(photographyServices[0].value)
+  const [serviceType, setServiceType] = useState<string>(photographyServices[0].value)
 
   const packageName = useMemo(
     () =>
@@ -21,7 +22,7 @@ export function BookingForm() {
     [serviceType],
   )
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setState({ status: 'submitting' })
 
@@ -144,7 +145,7 @@ export function BookingForm() {
           <select
             name="serviceType"
             value={serviceType}
-            onChange={(event) => setServiceType(event.target.value as typeof serviceType)}
+            onChange={(event) => setServiceType(event.target.value)}
             className="booking-input"
           >
             {photographyServices.map((service) => (
@@ -159,6 +160,7 @@ export function BookingForm() {
           <input
             name="preferredDate"
             type="date"
+            min={new Date().toISOString().slice(0, 10)}
             required
             className="booking-input"
           />
@@ -262,7 +264,7 @@ function Field({
   className = '',
 }: {
   label: string
-  children: React.ReactNode
+  children: ReactNode
   className?: string
 }) {
   return (
