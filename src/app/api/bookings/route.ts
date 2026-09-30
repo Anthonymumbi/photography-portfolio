@@ -6,8 +6,6 @@ import { photographyServices } from '~/config/booking'
 import { eq } from 'drizzle-orm'
 import { sendBookingRequestEmails } from '~/lib/email/booking-email-service'
 
-const serviceValues = photographyServices.map((service) => service.value)
-
 const bookingSchema = z.object({
   clientName: z.string().trim().min(2).max(150),
   email: z.string().trim().email().max(255),
